@@ -1,0 +1,140 @@
+================================================================================
+MOTORIDE RENTAL SYSTEM - SETUP & CONFIGURATION NOTES
+================================================================================
+
+DATE: November 22, 2025
+DATABASE: motoride_rental
+
+================================================================================
+IMPORTANT FIXES APPLIED
+================================================================================
+
+1. DATABASE CONFIGURATION FIX (CRITICAL)
+   File: config.php (Line 5)
+   Changed: $db = 'motoride'
+   To: $db = 'motoride_rental'
+
+   Reason: The SQL file creates database named 'motoride_rental' but config.php
+   was pointing to 'motoride', causing connection failure.
+
+================================================================================
+DEFAULT LOGIN CREDENTIALS
+================================================================================
+
+ADMIN ACCESS:
+   URL: http://localhost/motocar_renta-main/motocar_renta-main/admin_login.php
+   Email: admin@motoride.com
+   Password: password
+
+USER ACCESS:
+   URL: http://localhost/motocar_renta-main/motocar_renta-main/user_login.php
+   Users need to register first via the registration link
+
+================================================================================
+KNOWN ISSUES TO FIX
+================================================================================
+
+PRIORITY 1 - BROKEN LINKS:
+   [ ] user_login.php (Line 217) - Links to 'user_register.php' but file is
+       named 'register.php'. Either rename register.php or update the link.
+
+PRIORITY 2 - SECURITY ISSUES:
+   [ ] admin_dashboard.php (Lines 15-22) - DELETE/UPDATE use GET parameters
+       without CSRF protection
+   [ ] admin_login.php (Line 17) - Hardcoded admin check, should use database
+       role column
+   [ ] All login pages - Need session_regenerate_id() after successful login
+   [ ] No secure/httponly flags on session cookies
+
+PRIORITY 3 - MISSING FEATURES:
+   [ ] Booking system - Database has 'bookings' table but no PHP functionality
+   [ ] User booking history page
+   [ ] Admin bookings management page
+   [ ] Booking confirmation emails
+   [ ] Payment integration
+
+================================================================================
+DATABASE STRUCTURE
+================================================================================
+
+Tables Created:
+   1. users - Stores user/admin accounts
+   2. vehicles - Stores vehicle inventory
+   3. bookings - Stores rental bookings (NOT YET IMPLEMENTED IN PHP)
+
+Sample Data Included:
+   - 1 Admin user (admin@motoride.com)
+   - 4 Sample vehicles (2 motorcycles, 2 cars)
+
+================================================================================
+FILE STRUCTURE
+================================================================================
+
+MAIN FILES:
+   index.php           - Landing page (portal selection)
+   config.php          - Database configuration [FIXED]
+
+USER PORTAL:
+   user_login.php      - User login
+   register.php        - User registration [LINK BROKEN IN user_login.php]
+   user_home.php       - User homepage/dashboard
+   shop.php            - Browse all vehicles with filters
+   contact.php         - Contact information page
+
+ADMIN PORTAL:
+   admin_login.php     - Admin login
+   admin_dashboard.php - Admin CRUD for vehicles
+
+SHARED:
+   logout.php          - Logout functionality
+
+DATABASE:
+   motoride_rental.sql - Database schema and sample data
+
+================================================================================
+XAMPP CONFIGURATION
+================================================================================
+
+Requirements:
+   - Apache: Running
+   - MySQL: Running
+   - PHP Version: 8.2.12
+   - Database: motoride_rental (imported via phpMyAdmin or MySQL CLI)
+
+Access URLs:
+   - Application: http://localhost/motocar_renta-main/motocar_renta-main/
+   - phpMyAdmin: http://localhost/phpmyadmin
+
+================================================================================
+NEXT STEPS / RECOMMENDATIONS
+================================================================================
+
+IMMEDIATE:
+   1. Fix the user_register.php link issue
+   2. Test admin login with default credentials
+   3. Test user registration and login
+
+SHORT TERM:
+   1. Implement booking functionality
+   2. Add CSRF protection to admin forms
+   3. Add proper role-based access control
+   4. Implement session security measures
+
+LONG TERM:
+   1. Add email notifications
+   2. Implement payment gateway
+   3. Add user profile management
+   4. Add vehicle availability calendar
+   5. Add booking reports for admin
+
+================================================================================
+NOTES
+================================================================================
+
+- All passwords are hashed using PHP's password_hash() function
+- Default admin password hash is Laravel's default: 'password'
+- Database uses UTF8MB4 charset for full Unicode support
+- Foreign keys are properly set up between bookings, users, and vehicles
+- Prepared statements are used to prevent SQL injection
+
+================================================================================
